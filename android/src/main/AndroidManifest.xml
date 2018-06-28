@@ -1,6 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.calendarevents">
 
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <!--
+        The Calendar integration is currently kicked into effect by WelcomePage
+        which a Jitsi Meet SDK for Android client/consumer may disable. Do not
+        declare the _CALENDAR permissions so that they don't leak into the
+        client.
+    -->
+    <!-- uses-permission android:name="android.permission.READ_CALENDAR" / -->
+
+    <!--
+        Jitsi Meet and Jitsi Meet SDK for Android do not currently have a use
+        case for WRITE_CALENDAR.
+    -->
+    <!-- uses-permission android:name="android.permission.WRITE_CALENDAR" / -->
 </manifest>
