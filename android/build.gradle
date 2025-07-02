@@ -18,6 +18,8 @@ android {
     lintOptions {
        warning 'InvalidPackage'
     }
+
+    namespace "com.calendarevents"
 }
 
 dependencies {
