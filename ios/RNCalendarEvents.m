@@ -780,14 +780,22 @@ RCT_EXPORT_METHOD(checkPermissions:(RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
+    void (^handler)(BOOL, NSError * _Nullable) = ^(BOOL granted, NSError *error) {
         NSString *status = granted ? @"authorized" : @"denied";
         if (!error) {
             resolve(status);
         } else {
             reject(@"error", @"authorization request error", error);
         }
-    }];
+    };
+
+    // iOS 17+ linked apps must use the full-access API; the deprecated
+    // requestAccessToEntityType: no longer prompts and returns denied.
+    if (@available(iOS 17.0, *)) {
+        [self.eventStore requestFullAccessToEventsWithCompletion:handler];
+    } else {
+        [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:handler];
+    }
 }
 
 RCT_EXPORT_METHOD(findCalendars:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
